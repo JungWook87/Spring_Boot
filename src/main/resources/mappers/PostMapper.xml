@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.domain.post.PostMapper">
+    <!-- namespace 속성에 Mapper 인터페이스의 경로를 선언하여 Mapper와 XML Mapper를 연결
+        Mapper 인터페이스는 XML Mapper에서 메서드명과 동일한 id를 가진 SQL 쿼리를 찾아서 실행 -->
+
+    <!-- <sql>태그와 <include>태그
+        공통으로 사용되거나 반복적으로 사용되는 쿼리를 처리할 수 있다. -->
+
+    <!-- SELECT 칼럼과 멤버 변수 매핑하기
+        DB에서는 언더바(_)를 사용하고 JAVA에서는 카멜케이스를 사용
+
+        1. SELECT 하는 칼럼마다 별칭(Alias)를 지정
+        2. MyBatis의 ResultMap을 이용
+        3. properties(application.properties) 또는 mybatis-config 파일에 설정을 추가
+
+        1번은 비효율적, 2번은 코드가 복잡해짐
+        3번 사용
+        application.properties에 다음의 설정 추가
+        # column name to camel case
+        mybatis.configuration.map-underscore-to-camel-case=true -->
+
+    <!-- tb_post 테이블 전체 컬럼 -->
+    <sql id="postColumns">
+        id ,
+        title ,
+        content ,
+        writer ,
+        view_cnt ,
+        notice_yn ,
+        delete_yn ,
+        created_date ,
+        modified_date
+    </sql>
+
+    <!-- 게시글 저장 -->
+    <insert id="save" parameterType="com.study.domain.PostRequest">
+        INSERT INTO tb_post(
+            <include refid="postColumns" />
+        ) VALUES (
+            #{id},
+            #{title},
+            #{content},
+            #{wirter},
+            0,
+            #{noticeYn},
+            0,
+            NOW(),
+            NULL
+        )
+    </insert>
+
+    <!-- 게시글 상세정보 보기 -->
+    <select id="findById" parameterType="long" resultType="com.study.domain.post.PostResponse">
+        SELECT
+            <include refid="postColumns"/>
+        FROM
+            tb_post
+        WHERE
+            id = #{value}
+    </select>
+
+    <!-- 게시글 수정 -->
+    <update id="update" parameterType="com.study.domain.post.PostRequest">
+        UPDATE tb_post
+        SET
+            modified_date = NOW(),
+            title = #{title},
+            content = #{content},
+            writer = #{writer},
+            notice_yn = #{noticeYn}
+        WHERE
+            id = #{id}
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <delete id="deleteById" parameterType="long">
+        UPDATE tb_post
+        SET
+            delete_yn = 1
+        WHERE
+            id = #{id}
+    </delete>
+
+    <!-- 게시글 리스트 조회 -->
+    <select id="findAll" resultType="com.study.domain.post.PostResponse">
+        SELECT
+            <include refid="postColumns"/>
+        FROM
+            tb_post
+        WHERE
+            delete_yn = 0
+        ORDER BY
+            id DESC
+    </select>
+
+</mapper>

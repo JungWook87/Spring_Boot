@@ -55,7 +55,12 @@ public class DatabaseConfig {
     public SqlSessionFactory sqlSessionFactory() throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(dataSource());
-        // factoryBean.setMapperLocations(context.getResouces("classpath:/mappers/**/*Mapper.xml"));
+        factoryBean.setMapperLocations(context.getResources("classpath:/mappers/**/*Mapper.xml"));
+        // XML Mapper의 경로를 의미. 애플리케이션 구동하면 부트가 context.getResource()에 선언한 경로에서 XML Mapper를 찾아 읽는다
+        // classpath는 src/main/resources를 의미한다.
+        // ** : 0개 이상의 디렉토리와 파일 매칭 // * : 0개 이상의 문자와 매칭 // ? : 1개의 문자와 매칭
+        factoryBean.setConfiguration(mybatisConfig());
+        // mybatisConfig() 빈을 이용해서 MyBatis 옵션을 설정
         return factoryBean.getObject();
         // sqlSessionFactory는 SqlSessionFactory 객체를 생성한다. SqlSessionFactory는 DB 커넥션과 SQL 실행에 대한 모든 것을 갖는 객체이다
         // SqlSessionFactoryBean은 FactoryBean 인터페이스의 구현 클래스로, 마이바티스(MyBatis)와 스프링의 연동 모듈로 사용된다
@@ -73,5 +78,12 @@ public class DatabaseConfig {
 
         // SqlSessionTemplate 는 SqlSessionFactory를 통해 생성되고, 공식 문서의 내용과 같이
         // DB의 커밋, 롤백 등 SQL의 실행에 필요한 모든 메서드를 갖는 객체로 생각할 수 있다.
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "mybatis.configuration")
+    // application.properties에서 mybatis.configuration 시작하는 모든 설정을 읽어 스프링 컨테이너에 빈으로 등록
+    public org.apache.ibatis.session.Configuration mybatisConfig(){
+        return new org.apache.ibatis.session.Configuration();
     }
 }
