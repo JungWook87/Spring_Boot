@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!-- 타임리프의 th 속성을 사용하기 위해 선언된 네임스페이스. 순수 HTML로만 이루어진 페이지에서는 필요없다-->
+    <head th:replace="fragments/header :: main-head"/>
+    <body th:replace="fragments/body :: main-body"/>
+    <!-- th:replace : JSP의 <include>태그와 유사한 속성으로, header.html의 main-head와 body.html의 main-body 프래그먼트를 찾아 해당 코드로 치환한다 -->
+
+</html>
+
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>The page is a write page</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <h2>Welcome Spring Boot!</h2>-->
+<!--    <span th:text="${t}">여기는 제목입니다.</span>-->
+<!--    &lt;!&ndash; JSP의 EL 표현식인 ${}와 마찬가지로 타임리프도 ${} 표현식을 이용해 컨트롤러에서 전달받은 데이터에 접근할 수 있다-->
+<!--         th:text는 데이터를 텍스트 형식으로 화면에 출력하며, JSTL의 c:forEach. c:set 등의 태그와 마찬가지로 여러 가지 속성이 존재한다&ndash;&gt;-->
+<!--    &lt;!&ndash; 타임리프 공식 문서의 튜토리얼에 여러 가지 속성과 함수들의 설명이 있다 &ndash;&gt;-->
+<!--    <span th:text="${c}">여기는 내용입니다.</span>-->
+<!--    <span>[[ ${w} ]]</span>-->
+<!--</body>-->

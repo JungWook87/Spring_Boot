@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout">
+<head th:fragment="main-head">
+<!-- th:fragment : <head> 태그에 해당 속성을 사용해서 fragment의 이름을 지정한다.
+     fragment는 다른 HTML에서 include 또는 replace 해서 적용할수 있다.-->
+    <meta http-equiv="Content-type" content="text/html" charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <th:block layout:fragment="title"></th:block>
+    <!-- th:block : layout:fragment 속성에 이름을 지정해서 실제 컨테츠 페이지의 내용을 채우는 기능
+         해당 기능은 동적인 처리가 필요할 때 사용된다-->
+
+    <link rel="stylesheet" th:href="@{/css/default.css}"/>
+    <!-- th:href : <a>태그의 href 속성과 동일하며, JSTL의 <c:url>태그와 마찬가지로 웹 어플리케이션을
+         구분하는 경로(Context Path)를 포함한다. 콘텍스트 경로는 application.properties에서 변경할 수 있다-->
+    <link rel="stylesheet" th:href="@{/css/common.css}"/>
+    <link rel="stylesheet" th:href="@{/css/content.css}"/>
+    <link rel="stylesheet" th:href="@{/css/button.css}"/>
+
+    <th:block layout:fragment="add-css"></th:block>
+</head>
+</html>

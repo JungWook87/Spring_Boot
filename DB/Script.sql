@@ -14,3 +14,5 @@ CREATE TABLE `tb_post` (
 desc tb_post;
 show tables;
 show full columns from tb_post;
+
+commit;

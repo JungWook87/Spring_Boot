@@ -62,16 +62,16 @@ class BoardApplicationTests {
 	* "컨테이너에서 빈(Bean)을 이런식으로 주입해 주는구나" 정도만 기억하자
 	* */
 
-	@Test
-	public void testByApplicationContext2(){
-		try{
-			System.out.println("====================");
-			System.out.println(context.getBean("abc"));
-			System.out.println("====================");
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-	}
+//	@Test
+//	public void testByApplicationContext2(){
+//		try{
+//			System.out.println("====================");
+//			System.out.println(context.getBean("abc"));
+//			System.out.println("====================");
+//		} catch (Exception e){
+//			e.printStackTrace();
+//		}
+//	}
 	/* sqlSessionFactory의 @Bean 어노테이션에 name 속성을 이용하여 객체를 주입받는 방법
 	* SqlSessionFactory 빈(Bean)의 이름을 "abc"로 변경해서 테스트한 결과
 	* org.apache.ibatis.session.defaults.DefaultSqlSessionFactory@531a716c
