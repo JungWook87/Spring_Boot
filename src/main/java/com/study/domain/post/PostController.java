@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -29,5 +30,12 @@ public class PostController {
         }
 
         return "post/write";
+    }
+
+    //신규 글 작성
+    @PostMapping("/post/save.do")
+    public String postSava(final PostRequest params){
+        postService.savePost(params);
+        return "redirect:/post/list.do";
     }
 }
