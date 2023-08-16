@@ -46,7 +46,7 @@ public class PostService {
      */
     @Transactional
     public Long updatePost(final PostRequest params){
-        postMapper.save(params);
+        postMapper.update(params);
         return params.getId();
     }
 

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 // 해당 클래스가 컨트롤러 클래스임을 명시
 @RequiredArgsConstructor
@@ -38,4 +40,28 @@ public class PostController {
         postService.savePost(params);
         return "redirect:/post/list.do";
     }
+
+    // 게시글 리스트 조회
+    @GetMapping("/post/list.do")
+    public String openPostList(Model model){
+        List<PostResponse> posts = postService.findAllPost();
+        model.addAttribute("posts", posts);
+        return "post/list";
+    }
+
+    // 게시글 상세 조회
+    @GetMapping("/post/view.do")
+    public String openPostView(@RequestParam final long id, Model model){
+        PostResponse post = postService.findPostById(id);
+        model.addAttribute("post", post);
+        return "post/view";
+    }
+
+    // 기존 게시글 수정
+    @PostMapping("/post/update.do")
+    public String updatePost(final PostRequest params){
+        postService.updatePost(params);
+        return "redirect:/post/list.do";
+    }
+
 }
