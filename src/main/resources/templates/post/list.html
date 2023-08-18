@@ -67,7 +67,7 @@
                             <td th:text="${row.viewCnt}"></td>
                         </tr>
 
-                        <tr th:unless="${not #lists.isEmpty(post)}">
+                        <tr th:unless="${#lists.isEmpty(post)}">
                         <!-- th:if == if / th:unless == else -->
                             <td colspan="5">
                                 <div class="no_data_msg">검색된 결과가 없습니다.</div>

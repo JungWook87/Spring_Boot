@@ -43,10 +43,42 @@
                 </table>
                 <p class="btn_set">
                     <a th:href="@{/post/write.do(id=${post.id})}" class="btns btn_bdr4 btn_mid">수정</a>
-                    <button type="button" class="btns btn_bdr1 btn_mid">삭제</button>
+                    <button type="button" onclick="deletePost();" class="btns btn_bdr1 btn_mid">삭제</button>
                     <a th:href="@{/post/list.do}" class="btns btn_bdr3 btn_mid">뒤로</a>
                 </p>
             </section>
         </div> <!-- /* content */ -->
     </th:block>
+
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            // 게시글 삭제
+            function deletePost(){
+                const id = [[ ${post.id} ]];
+
+                if(!confirm(id + '번 게시글을 삭제할까요?')){
+                    return false;
+                }
+
+                const formHtml = `
+                    <form id='deleteForm' action="/post/delete.do" method="post">
+                        <input type="hidden" id="id" name="id" value=${id} />
+                    </form>
+                `;
+
+                const doc = new DOMParser().parseFromString(formHtml, 'text/html');
+                /* 문자열로 그려진 HTML을 HTML 엘리먼트(Node)로 파싱 해주는 기능을 한다 */
+                const form = doc.body.firstChild;
+                /* doc에서 파싱된 폼 엘리먼트(Node)를 꺼내오는 역할을 한다. */
+                document.body.append(form);
+                /* HTML body에 폼 엘리먼트를 추가해서 submit을 발생 시킴 */
+                document.getElementById('deleteForm').submit();
+            }
+
+            /*]]>*/
+        </script>
+    </th:block>
+
 </html>

@@ -69,81 +69,78 @@
     <th:block layout:fragment="script">
     <!-- 자바스크립트도 마찬가지로 페이지마다 로직이 다르기 때문에 layout:fragment를 이용한다 -->
 
+        <script th:inline="javascript">
+            // <script> 태그에 th:linline 속성을 javascript로 선언해야 자바스크립트 내에서 타임리프 문법을 사용할 수 있다
+
+            /*<![CDATA[*/
+            // 타임리프는 '<', '>' 태그를 엄격하게 검사하기 때문에 자바스크립트 코드는 꼭 CDATA로 묶어줘야 한다
+            // CDATA는 특수문자를 전부 문자열로 치환할 때 사용한다
+
+                window.onload = () => {
+                    renderPostInfo();
+                }
+
+                // 게시글 상세정보 렌더링
+                function renderPostInfo(){
+                    const post = [[ ${post} ]];
+
+                    if(!post){
+                        initCreatedDate();
+                        // 해당 함수는 신규 게시글을 등록할 때, 등록일에 오늘 날짜를 랜더링 해주는 역할을 한다
+                        return false;
+                    }
+
+                    const form = document.getElementById('saveForm');
+                    const fields = ['id', 'title', 'content', 'writer', 'noticeYn'];
+                    form.isNotice.checked = post.noticeYn;
+                    form.createdDate.value = dayjs(post.createdDate).format('YYYY-MM-DD HH:mm');
+
+                    fields.forEach(field => {
+                        form[field].value = post[field];
+                    });
+                }
+
+
+                // 등록일 초기화
+                function initCreatedDate() {
+                    document.getElementById('createdDate').value = dayjs().format('YYYY-MM-DD');
+                    // dayjs는 JS 영역에서 날짜 데이터를 쉽게 컨트롤할 수 있도록 도와주는 라이브러리이다.
+                    // body.html 하단의 <script src="http://cdn...dayjs.min.js> 코드를 통해 dayjs 라이브러리를 import 해서 사용한다
+                }
+
+
+                // 게시글 저장(수정)
+                function savePost() {
+                    const form = document.getElementById('saveForm');
+                    const fields = [form.title, form.writer, form.content];
+                    const fieldNames = ['제목', '이름', '내용'];
+
+                    for (let i = 0, len = fields.length; i < len; i++) {
+                        isValid(fields[i], fieldNames[i]);
+                    }
+
+                    document.getElementById('saveBtn').disabled = true;
+                    form.noticeYn.value = form.isNotice.checked;
+                    form.action = [[ ${post == null} ]] ? '/post/save.do' : '/post/update.do';
+                    form.submit();
+                }
+                // 해당 함수는 저장하기 버튼의 onclick 이벤트를 통해 실행된다. 93~99 라인의 코드는 유효성 검사 코드이다.
+                // field에는 제목, 이름, 내용 필드를, fieldNames에는 각 필드의 이름을 담아 반복문 안에서 isValid() 함수를 호출해서 값이 입력되지 않은 필드를 탐색
+
+                // isValid() 함수는 앞에서 다운로드 받은 static 폴더에 있는 function.js에 선언된 함수이다
+                // 해당 함수는 필드의 value 값을 체크해서, 값이 비어 있는 경우 해당 필드로 포커싱 해주는 역할을 하는 함수이다.
+                // 앞으로 JS에서 공통으로 사용할 함수들은 /static/js/function.js에 추가하자
+
+                // 103번 라인은 데이터 중복 저장을 방지하기 위한 로직이다. 저장 버튼을 클릭한 상태에서 한 번 더 클릭하면, 같은 내용의 게시글이 두 개 저장된다.
+                // 이러한 상황을 방지하고자, 저장 로직이 실행될 때 저장 버튼이 작동되지 않도록 비활성화 한다.
+
+                // 104번 라인은 공지글 여부의 값을 세팅하는 로직이다. 공지글 설정이 체크되어 있으면 true, 아니면 false로 hidden 타입의 noticeYn 필드 값이 세팅된다
+
+                // 105번 라인은 폼의 action을 설정하는 로직이다. 컨트롤러에서 전달받은 게시글 응답 객체(post)의 유무에 따라 신규 저장인지, 기존 게시글의 수정인지를 구분한다
+                // "/post/save.do"는 신규 저장을, "post/update.do"는 수정을 의미한다
+
+                // 마지막으로 106번 라인은 form.submit();을 호출해서 폼 데이터를 서버로 전달한다
+            /*]]>*/
+        </script>
     </th:block>
 </html>
-
-
-
-<script th:inline="javascript">
-    // <script> 태그에 th:linline 속성을 javascript로 선언해야 자바스크립트 내에서 타임리프 문법을 사용할 수 있다
-
-    /*<![CDATA[*/
-    // 타임리프는 '<', '>' 태그를 엄격하게 검사하기 때문에 자바스크립트 코드는 꼭 CDATA로 묶어줘야 한다
-    // CDATA는 특수문자를 전부 문자열로 치환할 때 사용한다
-
-        window.onload = () => {
-            renderPostInfo();
-        }
-
-        // 게시글 상세정보 렌더링
-        function renderPostInfo(){
-            const post = [[ ${post} ]];
-
-            if(!post){
-                initCreatedDate();
-                // 해당 함수는 신규 게시글을 등록할 때, 등록일에 오늘 날짜를 랜더링 해주는 역할을 한다
-                return false;
-            }
-
-            const form = document.getElementById('saveForm');
-            const fields = ['id', 'title', 'content', 'writer', 'noticeYn'];
-            form.isNotice.checked = post.noticeYn;
-            form.createdDate.value = dayjs(post.createdDate).format('YYYY-MM-DD HH:mm');
-
-            fields.forEach(field => {
-                form[field].value = post[field];
-            });
-        }
-
-
-        // 등록일 초기화
-        function initCreatedDate() {
-            document.getElementById('createdDate').value = dayjs().format('YYYY-MM-DD');
-            // dayjs는 JS 영역에서 날짜 데이터를 쉽게 컨트롤할 수 있도록 도와주는 라이브러리이다.
-            // body.html 하단의 <script src="http://cdn...dayjs.min.js> 코드를 통해 dayjs 라이브러리를 import 해서 사용한다
-        }
-
-
-        // 게시글 저장(수정)
-        function savePost() {
-            const form = document.getElementById('saveForm');
-            const fields = [form.title, form.writer, form.content];
-            const fieldNames = ['제목', '이름', '내용'];
-
-            for (let i = 0, len = fields.length; i < len; i++) {
-                isValid(fields[i], fieldNames[i]);
-            }
-
-            document.getElementById('saveBtn').disabled = true;
-            form.noticeYn.value = form.isNotice.checked;
-            form.action = [[ ${post == null} ]] ? '/post/save.do' : '/post/update.do';
-            form.submit();
-        }
-        // 해당 함수는 저장하기 버튼의 onclick 이벤트를 통해 실행된다. 93~99 라인의 코드는 유효성 검사 코드이다.
-        // field에는 제목, 이름, 내용 필드를, fieldNames에는 각 필드의 이름을 담아 반복문 안에서 isValid() 함수를 호출해서 값이 입력되지 않은 필드를 탐색
-
-        // isValid() 함수는 앞에서 다운로드 받은 static 폴더에 있는 function.js에 선언된 함수이다
-        // 해당 함수는 필드의 value 값을 체크해서, 값이 비어 있는 경우 해당 필드로 포커싱 해주는 역할을 하는 함수이다.
-        // 앞으로 JS에서 공통으로 사용할 함수들은 /static/js/function.js에 추가하자
-
-        // 103번 라인은 데이터 중복 저장을 방지하기 위한 로직이다. 저장 버튼을 클릭한 상태에서 한 번 더 클릭하면, 같은 내용의 게시글이 두 개 저장된다.
-        // 이러한 상황을 방지하고자, 저장 로직이 실행될 때 저장 버튼이 작동되지 않도록 비활성화 한다.
-
-        // 104번 라인은 공지글 여부의 값을 세팅하는 로직이다. 공지글 설정이 체크되어 있으면 true, 아니면 false로 hidden 타입의 noticeYn 필드 값이 세팅된다
-
-        // 105번 라인은 폼의 action을 설정하는 로직이다. 컨트롤러에서 전달받은 게시글 응답 객체(post)의 유무에 따라 신규 저장인지, 기존 게시글의 수정인지를 구분한다
-        // "/post/save.do"는 신규 저장을, "post/update.do"는 수정을 의미한다
-
-        // 마지막으로 106번 라인은 form.submit();을 호출해서 폼 데이터를 서버로 전달한다
-    /*]]>*/
-</script>
