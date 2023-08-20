@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: main-head"></head>
+<body>
+    <form th:if="${not #maps.isEmpty(params.data)}" id="redirectForm" th:action="${params.redirectUri}" th:method="${params.method}" style="display:none;">
+        <input th:each="key, status : ${params.data.keySet()}" type="hidden" th:name="${key}" th:value="${params.data.get(key)};"/>
+    </form>
+
+    <script th:inline="javascript">
+        /* <![CDATA[ */
+
+        window.onload = () => {
+            const message = [[ ${params.message} ]];
+            if(message) {
+                alert(message);
+            }
+            // 컨트롤러에서 받은 message가 있는 경우, 사용자에게 alert 메시지를 보여준다
+
+            const form = document.getElementById('redirectForm');
+            if(form) {
+                form.submit();
+                return false;
+            }
+            // if 조건을 통해 HTML 내에 폼 태그(엘리머트)가 있는지를 체크한다.
+
+            const redirectUri = [[ ${params.redirectUri} ]];
+            location.href = redirectUri;
+            // MessageDto 타입의 객체인 params의 data가 비어있지 않다면 redirectForm을 submit();하고, data가 비어있으면 redirectUri에 해당하는 주소로 이동한다.
+            // 즉 data의 유무에 따라 submit인지 이동인지가 결정 된다
+        }
+
+        /* ]]> */
+    </script>
+</body>
+</html>
